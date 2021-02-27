@@ -34,7 +34,8 @@ services:
       - app
     networks:
       - server
-  rebbitmq:
+      
+  rabbitmq:
     build: ./rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=user
