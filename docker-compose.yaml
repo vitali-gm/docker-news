@@ -1,0 +1,50 @@
+version: "2"
+
+services:
+  nginx:
+    build: ./nginx
+    links:
+      - php
+    ports:
+      - "8080:80"
+    volumes_from:
+      - app
+    depends_on:
+      - php
+    networks:
+      - server
+
+  php:
+    build: ./php
+    expose:
+      - 9000
+    volumes_from:
+      - app
+    networks:
+      - server
+
+  postgresql:
+    build: ./postresql
+    ports:
+    - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=nagg
+    volumes_from:
+      - app
+    networks:
+      - server
+
+  app:
+    image: php:7.2-fpm
+    volumes:
+      - ../news:/var/www/html
+    command: "true"
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  server:
