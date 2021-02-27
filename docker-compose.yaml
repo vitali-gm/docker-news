@@ -23,6 +23,29 @@ services:
     networks:
       - server
 
+  elasticsearch:
+    build: ./elastic
+    environment:
+      - discovery.type=single-node
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    volumes_from:
+      - app
+    networks:
+      - server
+  rebbitmq:
+    build: ./rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "15672:15672"
+    volumes_from:
+      - app
+    networks:
+        - server
+
   postgresql:
     build: ./postresql
     ports:
