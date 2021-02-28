@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   nginx:
@@ -57,6 +57,8 @@ services:
       - POSTGRES_DB=nagg
     volumes_from:
       - app
+    volumes:
+      - postgresql:/var/lib/postgresql/data
     networks:
       - server
 
@@ -69,6 +71,7 @@ services:
 volumes:
   data:
     driver: local
+  postgresql:
 
 networks:
   server:
