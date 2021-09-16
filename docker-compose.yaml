@@ -7,21 +7,21 @@ services:
       - php
     ports:
       - "8080:80"
-    volumes_from:
-      - app
     depends_on:
       - php
     networks:
       - server
+    volumes:
+      - ../news/poliscan/web:/var/www/html/poliscan/web
 
   php:
     build: ./php
     expose:
       - 9000
-    volumes_from:
-      - app
     networks:
       - server
+    volumes:
+      - ../news:/var/www/html
 
   elasticsearch:
     build: ./elastic
@@ -30,21 +30,17 @@ services:
     ports:
     - "9200:9200"
     - "9300:9300"
-    volumes_from:
-      - app
     networks:
       - server
       
   rabbitmq:
     build: ./rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=password
+      - DEFAULT_USER=user
+      - DEFAULT_PASS=password
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes_from:
-      - app
     networks:
         - server
 
@@ -56,8 +52,6 @@ services:
       - POSTGRES_PASSWORD=12345678
       - POSTGRES_USER=postgres
       - POSTGRES_DB=nagg
-    volumes_from:
-      - app
     volumes:
       - postgresql:/var/lib/postgresql/data
     networks:
@@ -67,16 +61,9 @@ services:
     build: ./kibana
     ports:
     - "5601:5601"
-    volumes_from:
-      - app
     networks:
       - server
 
-  app:
-    image: php:7.2-fpm
-    volumes:
-      - ../news:/var/www/html
-    command: "true"
 
 volumes:
   data:
